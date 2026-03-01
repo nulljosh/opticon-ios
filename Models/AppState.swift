@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 @Observable
 final class AppState {
     var user: User?
@@ -75,6 +76,10 @@ final class AppState {
         portfolio = nil
         watchlist = []
         alerts = []
+        stocks = []
+        priceHistory = []
+        error = nil
+        markets = []
     }
 
     // MARK: - Stocks
