@@ -14,8 +14,8 @@ struct MarketCard: View {
                     .font(.caption.monospaced())
                     .foregroundStyle(.secondary)
 
-                if let liquidity = market.liquidity, liquidity > 0 {
-                    Label(formatCurrency(liquidity), systemImage: "drop")
+                if let liquidity = market.formattedLiquidity {
+                    Label(liquidity, systemImage: "drop")
                         .font(.caption.monospaced())
                         .foregroundStyle(.secondary)
                 }
@@ -30,14 +30,5 @@ struct MarketCard: View {
             }
         }
         .padding(.vertical, 4)
-    }
-
-    private func formatCurrency(_ value: Double) -> String {
-        if value >= 1_000_000 {
-            return String(format: "$%.1fM", value / 1_000_000)
-        } else if value >= 1_000 {
-            return String(format: "$%.0fK", value / 1_000)
-        }
-        return String(format: "$%.0f", value)
     }
 }

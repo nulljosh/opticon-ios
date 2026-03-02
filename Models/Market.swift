@@ -21,12 +21,20 @@ struct PredictionMarket: Codable, Identifiable {
     }
 
     var formattedVolume: String {
-        let vol = volume24hr ?? volume ?? 0
-        if vol >= 1_000_000 {
-            return String(format: "$%.1fM", vol / 1_000_000)
-        } else if vol >= 1_000 {
-            return String(format: "$%.0fK", vol / 1_000)
+        Self.formatCurrency(volume24hr ?? volume ?? 0)
+    }
+
+    var formattedLiquidity: String? {
+        guard let liquidity, liquidity > 0 else { return nil }
+        return Self.formatCurrency(liquidity)
+    }
+
+    static func formatCurrency(_ value: Double) -> String {
+        if value >= 1_000_000 {
+            return String(format: "$%.1fM", value / 1_000_000)
+        } else if value >= 1_000 {
+            return String(format: "$%.0fK", value / 1_000)
         }
-        return String(format: "$%.0f", vol)
+        return String(format: "$%.0f", value)
     }
 }

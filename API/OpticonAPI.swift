@@ -24,7 +24,7 @@ enum APIError: LocalizedError {
 }
 
 @MainActor
-final class OpticonAPI: @unchecked Sendable {
+final class OpticonAPI {
     static let shared = OpticonAPI()
 
     private let baseURL = "https://opticon.heyitsmejosh.com"
@@ -45,18 +45,15 @@ final class OpticonAPI: @unchecked Sendable {
     // MARK: - Auth
 
     func login(email: String, password: String) async throws -> User {
-        let url = try makeURL("/api/auth", query: ["action": "login"])
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(["email": email, "password": password])
-
-        let data = try await perform(request)
-        return try decode(User.self, from: data)
+        try await authRequest(action: "login", email: email, password: password)
     }
 
     func register(email: String, password: String) async throws -> User {
-        let url = try makeURL("/api/auth", query: ["action": "register"])
+        try await authRequest(action: "register", email: email, password: password)
+    }
+
+    private func authRequest(action: String, email: String, password: String) async throws -> User {
+        let url = try makeURL("/api/auth", query: ["action": action])
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -243,10 +240,14 @@ struct PriceHistory: Codable {
 
         var id: String { date }
 
-        var parsedDate: Date? {
+        private static let dateFormatter: DateFormatter = {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
-            return formatter.date(from: date)
+            return formatter
+        }()
+
+        var parsedDate: Date? {
+            Self.dateFormatter.date(from: date)
         }
     }
 }

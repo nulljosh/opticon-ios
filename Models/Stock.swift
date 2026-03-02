@@ -12,6 +12,17 @@ struct Stock: Codable, Identifiable, Hashable {
 
     var id: String { symbol }
 
+    var formattedVolume: String {
+        if volume >= 1_000_000_000 {
+            return String(format: "%.1fB", volume / 1_000_000_000)
+        } else if volume >= 1_000_000 {
+            return String(format: "%.1fM", volume / 1_000_000)
+        } else if volume >= 1_000 {
+            return String(format: "%.0fK", volume / 1_000)
+        }
+        return String(format: "%.0f", volume)
+    }
+
     enum CodingKeys: String, CodingKey {
         case symbol, name, price, change, volume
         case changePercent = "changesPercentage"

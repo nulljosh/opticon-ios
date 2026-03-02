@@ -11,6 +11,10 @@ struct StockDetailView: View {
 
     private let ranges = ["1d", "1w", "1mo", "3mo", "1y"]
 
+    private var isWatchlisted: Bool {
+        appState.isInWatchlist(stock.symbol)
+    }
+
     private var changeColor: Color {
         stock.change >= 0 ? Color(hex: "34c759") : Color(hex: "ff3b30")
     }
@@ -18,7 +22,6 @@ struct StockDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // Price header
                 VStack(spacing: 4) {
                     Text(String(format: "$%.2f", stock.price))
                         .font(.system(size: 44, weight: .bold, design: .monospaced))
@@ -31,7 +34,6 @@ struct StockDetailView: View {
                 }
                 .padding(.top, 8)
 
-                // Chart
                 if isLoading {
                     ProgressView()
                         .frame(height: 220)
@@ -44,7 +46,6 @@ struct StockDetailView: View {
                     chartView
                 }
 
-                // Range picker
                 Picker("Range", selection: $selectedRange) {
                     ForEach(ranges, id: \.self) { range in
                         Text(range.uppercased()).tag(range)
@@ -53,10 +54,9 @@ struct StockDetailView: View {
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
 
-                // Info section
                 VStack(spacing: 12) {
                     if stock.volume > 0 {
-                        infoRow("Volume", value: formatVolume(stock.volume))
+                        infoRow("Volume", value: stock.formattedVolume)
                     }
                     if stock.high52 > 0 {
                         infoRow("52W High", value: String(format: "$%.2f", stock.high52))
@@ -79,15 +79,15 @@ struct StockDetailView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         Task {
-                            if appState.isInWatchlist(stock.symbol) {
+                            if isWatchlisted {
                                 await appState.removeWatchlistSymbol(stock.symbol)
                             } else {
                                 await appState.addWatchlistSymbol(stock.symbol)
                             }
                         }
                     } label: {
-                        Image(systemName: appState.isInWatchlist(stock.symbol) ? "star.fill" : "star")
-                            .foregroundStyle(appState.isInWatchlist(stock.symbol) ? Color(hex: "f5a623") : .secondary)
+                        Image(systemName: isWatchlisted ? "star.fill" : "star")
+                            .foregroundStyle(isWatchlisted ? Color(hex: "f5a623") : .secondary)
                     }
                 }
             }
@@ -165,16 +165,5 @@ struct StockDetailView: View {
             Text(value)
                 .font(.caption.monospaced())
         }
-    }
-
-    private func formatVolume(_ vol: Double) -> String {
-        if vol >= 1_000_000_000 {
-            return String(format: "%.1fB", vol / 1_000_000_000)
-        } else if vol >= 1_000_000 {
-            return String(format: "%.1fM", vol / 1_000_000)
-        } else if vol >= 1_000 {
-            return String(format: "%.0fK", vol / 1_000)
-        }
-        return String(format: "%.0f", vol)
     }
 }

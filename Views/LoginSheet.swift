@@ -14,7 +14,7 @@ struct LoginSheet: View {
                         .textContentType(.emailAddress)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
-                        .disableAutocorrection(true)
+                        .autocorrectionDisabled()
                     SecureField("Password", text: $password)
                         .textContentType(isRegistering ? .newPassword : .password)
                 }

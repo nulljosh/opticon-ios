@@ -5,11 +5,11 @@ struct MarketsView: View {
     @State private var searchText = ""
 
     private var filteredStocks: [Stock] {
-        let allStocks = searchText.isEmpty ? appState.stocks : appState.stocks.filter {
+        if searchText.isEmpty { return appState.stocks }
+        return appState.stocks.filter {
             $0.symbol.localizedCaseInsensitiveContains(searchText) ||
             $0.name.localizedCaseInsensitiveContains(searchText)
         }
-        return allStocks
     }
 
     var body: some View {

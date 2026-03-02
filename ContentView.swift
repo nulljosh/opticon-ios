@@ -5,6 +5,8 @@ struct ContentView: View {
     @State private var selectedTab = 0
 
     var body: some View {
+        @Bindable var appState = appState
+
         TabView(selection: $selectedTab) {
             MarketsView()
                 .tabItem {
@@ -37,10 +39,7 @@ struct ContentView: View {
                 .tag(4)
         }
         .tint(Color(hex: "0071e3"))
-        .sheet(isPresented: Binding(
-            get: { appState.showLogin },
-            set: { appState.showLogin = $0 }
-        )) {
+        .sheet(isPresented: $appState.showLogin) {
             LoginSheet()
                 .environment(appState)
         }

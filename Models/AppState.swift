@@ -47,22 +47,18 @@ final class AppState {
     }
 
     func login(email: String, password: String) async {
-        isLoading = true
-        error = nil
-        do {
-            user = try await OpticonAPI.shared.login(email: email, password: password)
-            showLogin = false
-        } catch {
-            self.error = error.localizedDescription
-        }
-        isLoading = false
+        await authenticate { try await OpticonAPI.shared.login(email: email, password: password) }
     }
 
     func register(email: String, password: String) async {
+        await authenticate { try await OpticonAPI.shared.register(email: email, password: password) }
+    }
+
+    private func authenticate(_ request: () async throws -> User) async {
         isLoading = true
         error = nil
         do {
-            user = try await OpticonAPI.shared.register(email: email, password: password)
+            user = try await request()
             showLogin = false
         } catch {
             self.error = error.localizedDescription

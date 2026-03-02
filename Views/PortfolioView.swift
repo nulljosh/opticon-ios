@@ -46,7 +46,6 @@ struct PortfolioView: View {
     private func portfolioContent(_ portfolio: Portfolio) -> some View {
         ScrollView {
             VStack(spacing: 24) {
-                // Summary header
                 VStack(spacing: 8) {
                     Text("Total Value")
                         .font(.caption)
@@ -62,7 +61,6 @@ struct PortfolioView: View {
                 }
                 .padding(.top, 24)
 
-                // Holdings
                 if !portfolio.holdings.isEmpty {
                     sectionCard("Holdings") {
                         ForEach(portfolio.holdings) { holding in
