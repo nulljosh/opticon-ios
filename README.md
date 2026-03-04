@@ -1,6 +1,12 @@
+<div align="center">
+
 # Opticon iOS
 
-Native iOS companion for the [Opticon](https://opticon.heyitsmejosh.com) financial terminal. Live market data, portfolio tracking, prediction markets, price alerts, and watchlist management -- wired directly to the Vercel API backend.
+<img src="icon.svg" alt="Opticon iOS" width="120" />
+
+Native iOS companion for the [Opticon](https://opticon.heyitsmejosh.com) financial terminal.
+
+</div>
 
 ## Architecture
 
