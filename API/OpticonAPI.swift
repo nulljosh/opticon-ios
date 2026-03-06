@@ -165,6 +165,36 @@ final class OpticonAPI {
         _ = try await perform(request)
     }
 
+    // MARK: - Situation Data
+
+    func fetchEarthquakes(city: String) async throws -> [Earthquake] {
+        let url = try makeURL("/api/earthquakes", query: ["city": city])
+        let request = URLRequest(url: url)
+        let data = try await perform(request)
+        return try decode([Earthquake].self, from: data)
+    }
+
+    func fetchFlights(city: String) async throws -> [Flight] {
+        let url = try makeURL("/api/flights", query: ["city": city])
+        let request = URLRequest(url: url)
+        let data = try await perform(request)
+        return try decode([Flight].self, from: data)
+    }
+
+    func fetchIncidents(city: String) async throws -> [Incident] {
+        let url = try makeURL("/api/incidents", query: ["city": city])
+        let request = URLRequest(url: url)
+        let data = try await perform(request)
+        return try decode([Incident].self, from: data)
+    }
+
+    func fetchWeatherAlerts(city: String) async throws -> [WeatherAlert] {
+        let url = try makeURL("/api/weather-alerts", query: ["city": city])
+        let request = URLRequest(url: url)
+        let data = try await perform(request)
+        return try decode([WeatherAlert].self, from: data)
+    }
+
     // MARK: - Prediction Markets
 
     func fetchMarkets(limit: Int = 50, order: String = "volume24hr") async throws -> [PredictionMarket] {

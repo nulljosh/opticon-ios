@@ -37,6 +37,12 @@ struct ContentView: View {
                     Label("Settings", systemImage: "gearshape")
                 }
                 .tag(4)
+
+            SituationView()
+                .tabItem {
+                    Label("Situation", systemImage: "globe.americas")
+                }
+                .tag(5)
         }
         .tint(Color(hex: "0071e3"))
         .sheet(isPresented: $appState.showLogin) {
